@@ -1,67 +1,69 @@
 {
-  "name": "development-tool-docker",
-  "version": "0.6.4",
-  "description": "development build tasks for node.",
-  "main": "./lib/index.js",
-  "typings": "./lib/index",
-  "scripts": {
-    "gulp": "gulp",
-    "postinstall": "npm prune",
-    "reinstall": "npm cache clean && npm install",
-    "test": "gulp build test",
-    "prepublish": "gulp build --release",
-    "e2e": "protractor",
-    "e2e.live": "protractor --elementExplorer"
-  },
-  "keywords": [
-    "development",
-    "tool",
-    "gulp",
-    "typescript",
-    "node",
-    "babel"
-  ],
-  "author": "houjun",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/zhouhoujun/development-tool-docker/issues"
-  },
-  "registry": "jspm",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zhouhoujun/development-tool-docker.git"
-  },
-  "dependencies": {
-    "@types/chai": "^3.4.34",
-    "@types/chalk": "^0.4.31",
-    "@types/gulp": "^3.8.32",
-    "@types/gulp-mocha": "0.0.29",
-    "@types/lodash": "^4.14.37",
-    "@types/minimist": "^1.1.29",
-    "chai": "^3.5.0",
-    "chalk": "^1.1.3",
-    "checksum": "^0.1.1",
-    "del": "^2.2.1",
-    "development-core": "^0.10.4",
-    "development-assert-ts": "^0.6.1",
-    "gulp": "^3.9.1",
-    "gulp-cached": "^1.1.0",
-    "gulp-mocha": "^3.0.1",
-    "gulp-sourcemaps": "^2.1.1",
-    "gulp-typescript": "^3.0.2",
-    "gulp-uglify": "^2.0.0",
-    "lodash": "^4.13.1"
-  },
-  "devDependencies": {
-    "bluebird": "^3.4.1",
-    "development-tool": "^0.10.4",
-    "development-tool-node": "^0.6.4",
-    "through2": "^2.0.1",
-    "ts-node": "^2.1.0",
-    "tslint": "^4.4.2",
-    "tslint-stylish": "^2.1.0",
-    "typescript": "^2.1.4",
-    "zone.js": "^0.6.10"
-  },
-  "homepage": "https://github.com/zhouhoujun/development-tool-docker#readme"
+    "name": "development-tool-docker",
+    "version": "0.8.0",
+    "description": "development tool for project publish via docker. docker build, docker publish, docker images export auto.",
+    "main": "./lib/index.js",
+    "typings": "./lib/index",
+    "scripts": {
+        "gulp": "gulp",
+        "postinstall": "npm prune",
+        "reinstall": "npm cache clean && npm install",
+        "test": "gulp build test",
+        "prepublish": "gulp build --release",
+        "e2e": "protractor",
+        "e2e.live": "protractor --elementExplorer"
+    },
+    "keywords": [
+        "development",
+        "tool",
+        "docker",
+        "publish",
+        "compose",
+        "typescript",
+        "gulp"
+    ],
+    "author": "houjun",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/zhouhoujun/development-tool-docker/issues"
+    },
+    "registry": "jspm",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/zhouhoujun/development-tool-docker.git"
+    },
+    "dependencies": {
+        "@types/chai": "^3.4.34",
+        "@types/chalk": "^0.4.31",
+        "@types/gulp": "^3.8.32",
+        "@types/gulp-mocha": "0.0.29",
+        "@types/lodash": "^4.14.37",
+        "@types/minimist": "^1.1.29",
+        "chai": "^3.5.0",
+        "chalk": "^1.1.3",
+        "checksum": "^0.1.1",
+        "del": "^2.2.1",
+        "development-assert-ts": "^0.6.1",
+        "development-core": "^0.10.4",
+        "gulp": "^3.9.1",
+        "gulp-cached": "^1.1.0",
+        "gulp-mocha": "^3.0.1",
+        "gulp-replace": "^0.5.4",
+        "gulp-sourcemaps": "^2.1.1",
+        "gulp-typescript": "^3.0.2",
+        "gulp-uglify": "^2.0.0",
+        "lodash": "^4.13.1"
+    },
+    "devDependencies": {
+        "bluebird": "^3.4.1",
+        "development-tool": "^0.10.4",
+        "development-tool-node": "^0.6.4",
+        "through2": "^2.0.1",
+        "ts-node": "^2.1.0",
+        "tslint": "^4.4.2",
+        "tslint-stylish": "^2.1.0",
+        "typescript": "^2.1.4",
+        "zone.js": "^0.6.10"
+    },
+    "homepage": "https://github.com/zhouhoujun/development-tool-docker#readme"
 }

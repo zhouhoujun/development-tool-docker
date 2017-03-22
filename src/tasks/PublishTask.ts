@@ -1,10 +1,10 @@
 
 import * as _ from 'lodash';
 // import * as path from 'path';
-import { IDynamicTaskOption, Operation, IDynamicTasks, dynamicTask, ITaskContext } from 'development-core';
+import { IDynamicTaskOption, IDynamicTasks, dynamicTask, ITaskContext } from 'development-core';
 // import * as chalk from 'chalk';
 import { DockerOption } from '../DockerOption';
-
+const replace = require('gulp-replace');
 
 export interface ServiceInfo {
     images: string[];
@@ -36,28 +36,39 @@ export class NodeDynamicTasks implements IDynamicTasks {
         return [
             {
                 name: 'build-docker',
-                oper: Operation.deploy,
                 shell: (ctx) => {
                     let cmds = '';
                     let dist = ctx.toUrl(ctx.getRootPath());
+                    let option = ctx.option as DockerOption;
+                    let buildcmd = ctx.toStr(option.buildcmd) || 'docker-compose down & docker-compose build';
                     if (/^[C-Z]:/.test(dist)) {
                         cmds = _.first(dist.split(':')) + ': & ';
                     }
-                    cmds = cmds + 'cd ' + dist + ' & docker-compose build';
+                    cmds = cmds + `cd ${dist} & ${buildcmd}`;
                     return cmds;
                 }
 
             },
-
             {
-
                 name: 'tag-docker',
-                oper: Operation.deploy,
                 shell: (ctx) => {
                     let info = this.getServiceInfo(ctx);
                     let cmds = '';
+
+                    let option = ctx.option as DockerOption;
+                    let version = '';
+                    if (option.version) {
+                        version = ctx.toStr(option.version);
+                    } else {
+                        let pkg = ctx.getPackage();
+                        if (pkg) {
+                            version = pkg.version;
+                        }
+                    }
+                    version = version || 'latest';
+
                     _.each(info.images, it => {
-                        let pimg = `${info.service}/${it}`;
+                        let pimg = `${info.service}/${it}:${version}`;
                         this.publishImages.push(pimg);
                         cmds = cmds + `docker tag ${it} ${pimg} & `
                     });
@@ -68,10 +79,32 @@ export class NodeDynamicTasks implements IDynamicTasks {
             },
             {
                 name: 'push-docker',
-                oper: Operation.deploy,
                 shell: (ctx) => {
                     let info = this.getServiceInfo(ctx);
-                    return _.map(this.publishImages, mg => info.user ? `docker login -u ${info.user} -p ${info.psw} ${info.service} & docker push ${mg}` : `docker push ${mg}`);
+                    let option = ctx.option as DockerOption;
+                    let pushcmd = ctx.toStr(option.pushcmd) || 'docker push';
+                    return _.map(this.publishImages, mg => info.user ? `docker login -u ${info.user} -p ${info.psw} ${info.service} & ${pushcmd} ${mg}` : `${pushcmd} ${mg}`);
+                }
+            },
+            {
+                name: 'export-docker-compose',
+                pipes: (ctx) => {
+                    let info = this.getServiceInfo(ctx);
+                    let pipes = [(ctx) => replace(/build:/gi, '# build:'), (ctx) => replace(/#\s*image:/gi, 'image:')];
+                    _.each(info.images, (img, idx) => {
+                        pipes.push(ctx => replace(img, this.publishImages[idx]));
+                    });
+                    return pipes;
+                }
+            },
+            {
+                name: 'save-docker-images',
+                shell: (ctx) => {
+                    let option = ctx.option as DockerOption;
+                    let info = this.getServiceInfo(ctx);
+                    let exportcmd = ctx.toStr(option.exportImagecmd) || 'docker save';
+                    let path = ctx.toUrl(ctx.getDist());
+                    return _.map(this.publishImages, (mg, idx) => option.exportImage  ? ` ${exportcmd} ${mg} -o ${path}/${info.images[idx]}.tar` : ``);
                 }
             }
         ];

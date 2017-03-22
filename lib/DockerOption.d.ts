@@ -16,6 +16,35 @@ export interface DockerOption extends IAsserts {
      */
     images?: TaskSource;
     /**
+     * docker build command. default 'docker-compose down & docker-compose build'
+     */
+    buildcmd?: TaskString;
+    /**
+     * command to push to registry service.
+     *
+     * @type {TaskString}
+     * @memberOf DockerOption
+     */
+    pushcmd?: TaskString;
+    /**
+     * export docker images or not.
+     *
+     * @type {boolean}
+     * @memberOf DockerOption
+     */
+    exportImage?: boolean;
+    /**
+     * the command to export docker image.
+     *
+     * @type {TaskString}
+     * @memberOf DockerOption
+     */
+    exportImagecmd?: TaskString;
+    /**
+     * task version.
+     */
+    version?: TaskString;
+    /**
      * the user account to login docker service.
      * default use this account.  you can setting it when run time via `--user`. etc.  --user accountname
      *
