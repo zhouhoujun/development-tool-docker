@@ -68,7 +68,7 @@ export class NodeDynamicTasks implements IDynamicTasks {
                     version = version || 'latest';
 
                     _.each(info.images, it => {
-                        let pimg = `${info.service}/${it}:${version}`;
+                        let pimg = info.service ? `${info.service}/${it}:${version}` : `${it}:${version}`;
                         this.publishImages.push(pimg);
                         cmds = cmds + `docker tag ${it} ${pimg} & `
                     });
@@ -81,6 +81,9 @@ export class NodeDynamicTasks implements IDynamicTasks {
                 name: 'push-docker',
                 shell: (ctx) => {
                     let info = this.getServiceInfo(ctx);
+                    if (!info.service) {
+                        return '';
+                    }
                     let option = ctx.option as DockerOption;
                     let pushcmd = ctx.toStr(option.pushcmd) || 'docker push';
                     return _.map(this.publishImages, mg => info.user ? `docker login -u ${info.user} -p ${info.psw} ${info.service} & ${pushcmd} ${mg}` : `${pushcmd} ${mg}`);
@@ -104,7 +107,7 @@ export class NodeDynamicTasks implements IDynamicTasks {
                     let info = this.getServiceInfo(ctx);
                     let exportcmd = ctx.toStr(option.exportImagecmd) || 'docker save';
                     let path = ctx.toUrl(ctx.getDist());
-                    return _.map(this.publishImages, (mg, idx) => option.exportImage  ? ` ${exportcmd} ${mg} -o ${path}/${info.images[idx]}.tar` : ``);
+                    return _.map(this.publishImages, (mg, idx) => option.exportImage ? ` ${exportcmd} ${mg} -o ${path}/${info.images[idx]}.tar` : ``);
                 }
             }
         ];

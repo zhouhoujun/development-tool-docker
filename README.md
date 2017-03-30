@@ -5,6 +5,8 @@ This repo is for distribution on `npm`. The source for this module is in the
 Please file issues and pull requests against that repo.
 This package use to develop kit for typescript node project development via gulp tasks, for project publish via docker. docker build, docker publish, docker images export auto.
 
+use shell command to build docker image via docker-compose.
+
 ## Install
 
 You can install this package either with `npm`.
@@ -26,6 +28,29 @@ import * as gulp from 'gulp';
 import  { Development } from 'development-tool';
 import { DockerOption } from 'development-tool-docker';
 
+```
+
+## config
+
+```ts
+<DockerOption> {
+    //task name.
+    name: 'deploy-server',
+    //docker compose file src.
+    src: 'docker-compose.yml',
+    //publish path
+    dist: './publish',
+    //export and save image or not.
+    exportImage: true,
+    //images will build. 
+    images: ['test_web', 'test_nginx'],
+    //docker registry site.
+    service: 'test.com',
+    //docker registry site account.
+    user: 'test',
+    //docker registry site account password.
+    psw: 'test'
+}
 ```
 
 ## Demo for angular2 web site publish

@@ -10,7 +10,7 @@ export interface DockerOption extends IAsserts {
      * @type {TaskString}
      * @memberOf INodeTaskOption
      */
-    service: TaskString;
+    service?: TaskString;
 
     /**
      * docker local build image names.

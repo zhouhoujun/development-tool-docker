@@ -1,6 +1,6 @@
 {
     "name": "development-tool-docker",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "development tool for project publish via docker. docker build, docker publish, docker images export auto.",
     "main": "./lib/index.js",
     "typings": "./lib/index",
@@ -44,7 +44,7 @@
         "checksum": "^0.1.1",
         "del": "^2.2.1",
         "development-assert-ts": "^1.*",
-        "development-core": "^1.*",
+        "development-core": "^1.0.1",
         "gulp": "^3.9.1",
         "gulp-cached": "^1.1.0",
         "gulp-mocha": "^3.0.1",
