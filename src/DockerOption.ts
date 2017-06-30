@@ -1,8 +1,14 @@
-import { IAsserts, TaskString, TaskSource } from 'development-core';
+import { IAsserts, TaskString, TaskSource, ITaskContext } from 'development-core';
 
 
-
-export interface DockerOption extends IAsserts {
+export interface DockerConfig {
+    /**
+     * docker-compose file.
+     * 
+     * @type {string}
+     * @memberOf DockerConfig
+     */
+    composeFile?: TaskString;
     /**
      * the service docker publish to.
      * default use this address.  you can setting it when run time via `--publish`. etc.  --publish service/address
@@ -70,6 +76,16 @@ export interface DockerOption extends IAsserts {
      * @memberOf DockerOption
      */
     psw?: TaskString;
+
+}
+
+export interface DockerOption extends DockerConfig, IAsserts {
+    // /**
+    //  * docker compse config
+    //  *
+    //  * @memberOf DockerOption
+    //  */
+    // composeConfig?: DockerConfig[] | ((ctx: ITaskContext) => DockerConfig[])
 
 }
 

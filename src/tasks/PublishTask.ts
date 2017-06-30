@@ -1,20 +1,58 @@
 
+// import { Gulp } from 'gulp';
 import * as _ from 'lodash';
 // import * as path from 'path';
-import { IDynamicTaskOption, IDynamicTasks, dynamicTask, ITaskContext } from 'development-core';
+import { IDynamicTaskOption, IDynamicTasks, dynamicTask, task, ITaskContext, ITaskInfo, ITask, TaskResult } from 'development-core';
 // import * as chalk from 'chalk';
+import * as path from 'path';
 import { DockerOption } from '../DockerOption';
 const replace = require('gulp-replace');
 
 export interface ServiceInfo {
+    composeFile: string;
     images: string[];
     service: string;
     user: string;
     psw: string;
 }
 
-@dynamicTask
-export class NodeDynamicTasks implements IDynamicTasks {
+// @task()
+// export class DockerCompose implements ITask {
+
+//     constructor(private info: ITaskInfo) {
+//     }
+
+//     /**
+//      * old filed.
+//      *
+//      * @type {ITaskInfo}
+//      * @memberOf ITask
+//      */
+//     getInfo(): ITaskInfo {
+//         this.info.name = this.info.name || 'DockerCompose';
+//         return this.info;
+//     }
+//     /**
+//      * setup task.
+//      *
+//      * @param {ITaskContext} context
+//      * @param {Gulp} [gulp]
+//      * @returns {TaskResult}
+//      *
+//      * @memberOf ITask
+//      */
+//     setup(context: ITaskContext, gulp?: Gulp): TaskResult {
+//         let info = this.getInfo();
+//         let option = context.option as DockerOption;
+//         context.generateTask(new DockerComposeDynamicTask().tasks())
+//         gulp.task(context.subTaskName(info), () => {
+
+//         });
+//     }
+// }
+
+@dynamicTask()
+export class DockerComposeDynamicTask implements IDynamicTasks {
     private publishImages = [];
 
     private _info: ServiceInfo;
@@ -23,6 +61,7 @@ export class NodeDynamicTasks implements IDynamicTasks {
             let option = ctx.option as DockerOption;
             let imgs = ctx.toSrc(option.images);
             this._info = <ServiceInfo>{
+                composeFile: ctx.toRootPath(ctx.to(option.composeFile) || './docker-compose.yml'),
                 images: _.isArray(imgs) ? imgs : [imgs],
                 service: ctx.env.publish || ctx.toStr(option.service),
                 user: ctx.env['user'] || ctx.toStr(option.user),
@@ -38,8 +77,10 @@ export class NodeDynamicTasks implements IDynamicTasks {
                 name: 'build-docker',
                 shell: (ctx) => {
                     let cmds = '';
-                    let dist = ctx.toUrl(ctx.getRootPath());
+
                     let option = ctx.option as DockerOption;
+                    let info = this.getServiceInfo(ctx);
+                    let dist = path.dirname(info.composeFile);
                     let buildcmd = ctx.toStr(option.buildcmd) || 'docker-compose down & docker-compose build';
                     if (/^[C-Z]:/.test(dist)) {
                         cmds = _.first(dist.split(':')) + ': & ';
