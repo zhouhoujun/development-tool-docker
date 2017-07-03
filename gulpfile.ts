@@ -9,4 +9,4 @@ Development.create(gulp, __dirname, [
         buildDist: 'build',
         loader: 'development-tool-node'
     }
-]);
+]).start();
