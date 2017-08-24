@@ -83,9 +83,9 @@ export class DockerComposeDynamicTask implements IDynamicTasks {
                     let dist = path.dirname(info.composeFile);
                     let buildcmd = ctx.toStr(option.buildcmd) || 'docker-compose down & docker-compose build';
                     if (/^[C-Z]:/.test(dist)) {
-                        cmds = _.first(dist.split(':')) + ': & ';
+                        cmds = _.first(dist.split(':')) + ': && ';
                     }
-                    cmds = cmds + `cd ${dist} & ${buildcmd}`;
+                    cmds = cmds + `cd ${dist} && ${buildcmd}`;
                     return cmds;
                 }
 
@@ -111,10 +111,10 @@ export class DockerComposeDynamicTask implements IDynamicTasks {
                     _.each(info.images, it => {
                         let pimg = info.service ? `${info.service}/${it}:${version}` : `${it}:${version}`;
                         this.publishImages.push(pimg);
-                        cmds = cmds + `docker tag ${it} ${pimg} & `
+                        cmds = cmds + `docker tag ${it} ${pimg} && `
                     });
 
-                    cmds = cmds.substring(0, cmds.lastIndexOf('&'));
+                    cmds = cmds.substring(0, cmds.lastIndexOf('&&'));
                     return cmds;
                 }
             },
@@ -127,7 +127,7 @@ export class DockerComposeDynamicTask implements IDynamicTasks {
                     }
                     let option = ctx.option as DockerOption;
                     let pushcmd = ctx.toStr(option.pushcmd) || 'docker push';
-                    return _.map(this.publishImages, mg => info.user ? `docker login -u ${info.user} -p ${info.psw} ${info.service} & ${pushcmd} ${mg}` : `${pushcmd} ${mg}`);
+                    return _.map(this.publishImages, mg => info.user ? `docker login -u ${info.user} -p ${info.psw} ${info.service} && ${pushcmd} ${mg}` : `${pushcmd} ${mg}`);
                 }
             },
             {
